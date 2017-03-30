@@ -2,25 +2,17 @@
 
 #include "BankAccount.h"
 #include <iostream>
+#include <cstdio>
 
 using namespace std;
 
-class SavingsAccount : BankAccount
+class SavingsAccount : public BankAccount
 {
 public:
 	SavingsAccount(string fName, string lName, double balance);
 	~SavingsAccount();
-	SavingsAccount();
-	virtual void DisplayAccountInfo();
-	virtual int GetAccountNumber();
-	virtual void UpdateFirstName(string newVal);
-	virtual void UpdateLastName(string newVal);
-	virtual void Widraw(double amount);
-	virtual void Deposit(double amount);
-	void AddProfit();
+	virtual void Addprofit();
 
 private:
-	BankAccount account;
-
 };
 

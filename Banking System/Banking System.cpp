@@ -4,25 +4,21 @@
 #include "stdafx.h"
 #include "SavingAccount.h"
 #include "ChequingAccount.h"
+#include <cstdio>
 #include <iostream>
 
 using namespace std;
 
 void MakeNewAccount();
 char DisplayMenu();
-void ShowSavingOptions();
-void ShowChequingOptions();
-void ShowCommonOptions();
-void updateSavingsAccount(SavingsAccount acc, int index, char userInput);
-void updateChequingAccount(ChequingAccount acc, int index, char userInput);
+void ShowOptions(BankAccount *acc);
+void updateAccount(BankAccount *acc, int index, char userInput);
+bool IsType(BankAccount* src);
+void DisplayAccountInfo(BankAccount *acc);
 
-ChequingAccount *chequingAccounts = new ChequingAccount[3];
 
-SavingsAccount *savingAccounts = new SavingsAccount[3];
-
-int nOfChequingAccounts = 0;
-
-int nOfSavingAccounts = 0;
+BankAccount **accounts = new BankAccount*[5];
+int noOfAccounts = 0;
 
 int main()
 {
@@ -33,25 +29,21 @@ int main()
 		char input = DisplayMenu();
 		if (input == 'a')
 		{
-			if (nOfChequingAccounts + nOfSavingAccounts == 0)
+			if (noOfAccounts == 0)
 			{
 				cout << "Add Accounts First";
 			}
 			else
 			{
-				for (int i = 0; i < nOfChequingAccounts ; i++)
+				for (int i = 0; i < noOfAccounts; i++)
 				{
-					chequingAccounts[i].DisplayAccountInfo();
-				}
-				for (int i = 0; i < nOfSavingAccounts; i++)
-				{
-					savingAccounts[i].DisplayAccountInfo();
+					DisplayAccountInfo(accounts[i]);
 				}
 			}
 		}
 		else if (input == 'b')
 		{
-			if (nOfChequingAccounts + nOfSavingAccounts < 5)
+			if (noOfAccounts < 5)
 			{
 				MakeNewAccount();
 			}
@@ -63,21 +55,20 @@ int main()
 		}
 		else if (input == 'c')
 		{
-			if (nOfChequingAccounts + nOfSavingAccounts > 0)
+			if (noOfAccounts > 0)
 			{
 				bool accountFound = false;
 					int userInputForAccNo;
 					cout << "Enter Account Number" << endl;
 					cin >> userInputForAccNo;
 					char userResponse;
-					for (int i = 0; i < nOfChequingAccounts; i++)
+					for (int i = 0; i < noOfAccounts; i++)
 					{
-						if (chequingAccounts[i].GetAccountNumber() == userInputForAccNo) {
+						if (accounts[i]->GetAccountNumber() == userInputForAccNo) {
 							accountFound = true;
 							for (;;) {
-								chequingAccounts[i].DisplayAccountInfo();
-								ShowCommonOptions();
-								ShowChequingOptions();
+								DisplayAccountInfo(accounts[i]);
+								ShowOptions(accounts[i]);
 								cin >> userResponse;
 								if (userResponse == 'f')
 								{
@@ -85,27 +76,7 @@ int main()
 								}
 								else
 								{
-									updateChequingAccount(chequingAccounts[i], i, userResponse);
-								}
-							}
-						}
-					}
-					for (int i = 0; i < nOfSavingAccounts; i++)
-					{
-						if (savingAccounts[i].GetAccountNumber() == userInputForAccNo) {
-							accountFound = true;
-							for (;;) {
-								savingAccounts[i].DisplayAccountInfo();
-								ShowCommonOptions();
-								ShowSavingOptions();
-								cin >> userResponse;
-								if (userResponse == 'f')
-								{
-									break;
-								}
-								else
-								{
-									updateSavingsAccount(savingAccounts[i], i, userResponse);
+									updateAccount(accounts[i], i, userResponse);
 								}
 							}
 						}
@@ -114,7 +85,6 @@ int main()
 					{
 						cout << "No Account Found!!" << endl;
 					}
-				
 			}
 			else
 			{
@@ -156,44 +126,43 @@ void MakeNewAccount() {
 	cout << "Select the type of Account" << endl;
 	cout << "\t a: Chequing" << endl;
 	cout << "\t b: Saving" << endl;
+	
 	cin >> typeOfAcc;
-	switch (typeOfAcc)
+	if (typeOfAcc == 'a')
 	{
-	case 'a':
-		chequingAccounts[nOfChequingAccounts] = ChequingAccount(fName, lName, initialBalance);
-		cout << "Your Account Number is:" << chequingAccounts[nOfChequingAccounts].GetAccountNumber() << endl;
+		accounts[noOfAccounts] = new ChequingAccount(fName, lName, initialBalance);
+		cout << "Your Account Number is:" << accounts[noOfAccounts]->GetAccountNumber() << endl;
 
-		nOfChequingAccounts++;
-		break;
-	case 'b':
-		savingAccounts[nOfSavingAccounts] = SavingsAccount(fName, lName, initialBalance);
-		cout << "Your Account Number is:" << savingAccounts[nOfSavingAccounts].GetAccountNumber() << endl;
-		nOfSavingAccounts++;
-		break;
-	default:
-		break;
+		noOfAccounts++;
+	}
+	else
+	{
+		accounts[noOfAccounts] = new SavingsAccount(fName, lName, initialBalance);
+		cout << "Your Account Number is:" << accounts[noOfAccounts]->GetAccountNumber() << endl;
+		noOfAccounts++;
 	}
 	cout << "ACCOUNT OPENED" << endl;
 }
 
-void ShowCommonOptions() {
+void ShowOptions(BankAccount *acc) {
 	cout << endl << endl;
 	cout << "a:Edit First Name" << endl;
 	cout << "b:Edit Last Name" << endl;
 	cout << "c:Deposit Money" << endl;
 	cout << "d:Withdraw Money" << endl;
-}
 
-void ShowSavingOptions() {
-	cout << "e:Add Profit" << endl;
+	if (IsType(acc))
+	{
+		cout << "e:Add Profit" << endl;
+	}
+	else
+	{
+		cout << "e:Increment Cheques Written" << endl;
+	}
 	cout << "f:Return to Main Menu" << endl;
 }
-void ShowChequingOptions() {
-	cout << "e:Increment Cheques Written" << endl;
-	cout << "f:Return to Main Menu" << endl;
-}
 
-void updateSavingsAccount(SavingsAccount acc, int index, char userInput) {
+void updateAccount(BankAccount *acc, int index, char userInput) {
 	string newVal;
 	double amount;
 	switch (userInput)
@@ -201,62 +170,64 @@ void updateSavingsAccount(SavingsAccount acc, int index, char userInput) {
 	case 'a':
 		cout << "Enter New First Name" << endl;
 		cin >> newVal;
-		acc.UpdateFirstName(newVal);
+		acc->UpdateFirstName(newVal);
 		break;
 	case 'b':
 		cout << "Enter New Last Name" << endl;
 		cin >> newVal;
-		acc.UpdateLastName(newVal);
+		acc->UpdateLastName(newVal);
 		break;
 	case 'c':
 		cout << "Enter the amount to Deposit" << endl;
 		cin >> amount;
-		acc.Deposit(amount);
+		acc->Deposit(amount);
 		break;
 	case 'd':
 		cout << "Enter the amount to Withdraw" << endl;
 		cin >> amount;
-		acc.Widraw(amount);
+		acc->Widraw(amount);
 		break;
 	case 'e':
-		acc.AddProfit();
+		if (IsType(acc))
+		{
+			acc->Addprofit();
+		}
+		else
+		{
+			acc->IncrementCheques();
+		}
 		break;
 	default:
 		break;
 	}
-	savingAccounts[index] = acc;
+	accounts[index] = acc;
 }
 
-void updateChequingAccount(ChequingAccount acc, int index, char userInput) {
-	string newVal;
-	double amount;
-	switch (userInput)
+void DisplayAccountInfo(BankAccount *acc) {
+
+	cout << endl << endl;
+	if (IsType(acc))
 	{
-	case 'a':
-		cout << "Enter New First Name" << endl;
-		cin >> newVal;
-		acc.UpdateFirstName(newVal);
-		break;
-	case 'b':
-		cout << "Enter New Last Name" << endl;
-		cin >> newVal;
-		acc.UpdateLastName(newVal);
-		break;
-	case 'c':
-		cout << "Enter the amount to Deposit" << endl;
-		cin >> amount;
-		acc.Deposit(amount);
-		break;
-	case 'd':
-		cout << "Enter the amount to Withdraw" << endl;
-		cin >> amount;
-		acc.Widraw(amount);
-		break;
-	case 'e':
-		acc.GiveCheque();
-		break;
-	default:
-		break;
+		cout << "This is a Savings Account" << endl;
 	}
-	chequingAccounts[index] = acc;
+	else
+	{
+		std::cout << "This is a Chequing Account" << std::endl;
+		
+	}
+
+	cout << "First Name is: " << acc->GetFirstName() << endl;
+	cout << "Last Name is: " << acc->GetLastName() << endl;
+	cout.precision(17);
+	cout << "Current Balance is: " << acc->GetBalance() << endl;
+	cout << "Account Number is: " << acc->GetAccountNumber() << endl;
+
 }
+
+bool IsType(BankAccount* src)
+{
+	return dynamic_cast<const SavingsAccount*>(src) != 0;
+}
+
+
+

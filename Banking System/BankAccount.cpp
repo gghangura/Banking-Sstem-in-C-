@@ -4,20 +4,21 @@
 
 using namespace std;
 
-BankAccount::BankAccount(string fName, string lName, double bal)
+BankAccount::BankAccount(string fName, string lName, double bal): firstName(fName), lastName(lName), balance(bal)
 {
 	firstName = fName;
 	lastName = lName;
 	balance = bal;
 	accountNumber = GenerateAccountNumber();
 }
-BankAccount::BankAccount() {
-
-}
 
 BankAccount::~BankAccount()
 {
 
+}
+
+BankAccount::BankAccount()
+{
 }
 
 int BankAccount::GenerateAccountNumber()
@@ -60,14 +61,13 @@ int BankAccount::GetAccountNumber() {
 	return accountNumber;
 }
 
-void BankAccount::DisplayAccountInfo() {
-
-	cout << "First Name is: " << firstName << endl;
-	cout << "Last Name is: " << lastName << endl;
-	cout.precision(17);
-	cout << "Current Balance is: " << balance << endl;
-	cout << "Account Number is: " << accountNumber << endl;
+string BankAccount::GetFirstName() {
+	return firstName;
 }
+string BankAccount::GetLastName() {
+	return lastName;
+}
+
 
 void BankAccount::Widraw(double amount) {
 	if (balance > amount)
@@ -99,6 +99,14 @@ void BankAccount::UpdateLastName(string newVal) {
 
 int BankAccount::GetBalance() {
 	return balance;
+}
+
+void BankAccount::IncrementCheques()
+{
+}
+
+void BankAccount::Addprofit()
+{
 }
 
 

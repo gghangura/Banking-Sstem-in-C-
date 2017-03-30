@@ -2,25 +2,19 @@
 
 #include "BankAccount.h"
 #include <iostream>
+#include <cstdio>
 
 using namespace std;
 
-class ChequingAccount : BankAccount
+class ChequingAccount : public BankAccount
 {
 public:
-	ChequingAccount(string fName, string lName, double balance);
-	ChequingAccount();
+	ChequingAccount(std::string fName, string lName, double balance);
 	~ChequingAccount();
-	void GiveCheque();
-	virtual void DisplayAccountInfo();
-	virtual int GetAccountNumber();
-	virtual void UpdateFirstName(string newVal);
-	virtual void UpdateLastName(string newVal);
-	virtual void Widraw(double amount);
-	virtual void Deposit(double amount);
+	virtual void IncrementCheques();
+
 
 private:
 	int numberOfCheques;
-	BankAccount account;
 };
 
