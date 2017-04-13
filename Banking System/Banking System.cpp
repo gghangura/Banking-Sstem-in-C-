@@ -14,12 +14,11 @@ char DisplayMenu();
 void ShowOptions(BankAccount *acc);
 void updateAccount(BankAccount *acc, int index, char userInput);
 bool IsType(BankAccount* src);
-void DisplayAccountInfo(BankAccount *acc);
+//void DisplayAccountInfo(BankAccount *acc);
+
 
 
 BankAccount **accounts = new BankAccount*[5];
-
-
 int noOfAccounts = 0;
 
 int main()
@@ -40,7 +39,6 @@ int main()
 				for (int i = 0; i < noOfAccounts; i++)
 				{
 					//DisplayAccountInfo(accounts[i]);
-					BankAccount *gurjitr = accounts[i];
 					cout << accounts[i];
 				}
 			}
@@ -71,7 +69,8 @@ int main()
 						if (accounts[i]->GetAccountNumber() == userInputForAccNo) {
 							accountFound = true;
 							for (;;) {
-								DisplayAccountInfo(accounts[i]);
+								//DisplayAccountInfo(accounts[i]);
+								cout << accounts[i];
 								ShowOptions(accounts[i]);
 								cin >> userResponse;
 								if (userResponse == 'f')
@@ -113,6 +112,7 @@ char DisplayMenu() {
 	cout << "d: Exit" << endl;
 	char userInput;
 	cin >> userInput;
+
 	return userInput;
 }
 
@@ -208,26 +208,26 @@ void updateAccount(BankAccount *acc, int index, char userInput) {
 }
 
 
-void DisplayAccountInfo(BankAccount *acc) {
-
-	cout << endl << endl;
-	if (IsType(acc))
-	{
-		cout << "This is a Savings Account" << endl;
-	}
-	else
-	{
-		std::cout << "This is a Chequing Account" << std::endl;
-		
-	}
-
-	cout << "First Name is: " << acc->GetFirstName() << endl;
-	cout << "Last Name is: " << acc->GetLastName() << endl;
-	cout.precision(17);
-	cout << "Current Balance is: " << acc->GetBalance() << endl;
-	cout << "Account Number is: " << acc->GetAccountNumber() << endl;
-
-}
+//void DisplayAccountInfo(BankAccount *acc) {
+//
+//	cout << endl << endl;
+//	if (IsType(acc))
+//	{
+//		cout << "This is a Savings Account" << endl;
+//	}
+//	else
+//	{
+//		std::cout << "This is a Chequing Account" << std::endl;
+//		
+//	}
+//
+//	cout << "First Name is: " << acc->GetFirstName() << endl;
+//	cout << "Last Name is: " << acc->GetLastName() << endl;
+//	cout.precision(17);
+//	cout << "Current Balance is: " << acc->GetBalance() << endl;
+//	cout << "Account Number is: " << acc->GetAccountNumber() << endl;
+//
+//}
 
 bool IsType(BankAccount* src)
 {
