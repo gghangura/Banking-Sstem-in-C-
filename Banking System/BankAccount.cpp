@@ -70,7 +70,8 @@ string BankAccount::GetLastName() {
 
 
 void BankAccount::Widraw(double amount) {
-	if (balance > amount)
+
+	if (Max(balance,amount))
 	{
 		cout << endl << endl;
 		cout << "Amount Widraw Success" << endl;

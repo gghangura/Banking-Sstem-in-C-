@@ -18,6 +18,8 @@ void DisplayAccountInfo(BankAccount *acc);
 
 
 BankAccount **accounts = new BankAccount*[5];
+
+
 int noOfAccounts = 0;
 
 int main()
@@ -37,7 +39,9 @@ int main()
 			{
 				for (int i = 0; i < noOfAccounts; i++)
 				{
-					DisplayAccountInfo(accounts[i]);
+					//DisplayAccountInfo(accounts[i]);
+					BankAccount *gurjitr = accounts[i];
+					cout << accounts[i];
 				}
 			}
 		}
@@ -202,6 +206,7 @@ void updateAccount(BankAccount *acc, int index, char userInput) {
 	}
 	accounts[index] = acc;
 }
+
 
 void DisplayAccountInfo(BankAccount *acc) {
 
